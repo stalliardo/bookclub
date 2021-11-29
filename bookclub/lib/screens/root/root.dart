@@ -4,8 +4,6 @@ import 'package:bookclub/states/currentUser.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-enum AuthStatus { loggedIn, notLoggedIn }
-
 class MyRoot extends StatefulWidget {
   MyRoot({Key? key}) : super(key: key);
 
@@ -14,14 +12,12 @@ class MyRoot extends StatefulWidget {
 }
 
 class _MyRootState extends State<MyRoot> {
-  AuthStatus _authStatus = AuthStatus.notLoggedIn;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Consumer<CurrentUser>(
-          builder: (context, someVar, _) => ScreenLoader(isLoaded: someVar.isLoggedIn),
+          builder: (context, _user, _) => ScreenLoader(isLoggedIn: _user.isLoggedIn),
         ),
       ),
     );
@@ -30,12 +26,12 @@ class _MyRootState extends State<MyRoot> {
 
 // class to determine which Widget to render...
 class ScreenLoader extends StatelessWidget {
-  bool isLoaded;
+  bool isLoggedIn;
 
-  ScreenLoader({required this.isLoaded});
+  ScreenLoader({required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
-    return isLoaded ? HomeScreen() : Login();
+    return isLoggedIn ? HomeScreen() : Login();
   }
 }
