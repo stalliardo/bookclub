@@ -1,10 +1,42 @@
+import 'package:bookclub/screens/home/home.dart';
 import 'package:bookclub/screens/signup/signup.dart';
+import 'package:bookclub/states/currentUser.dart';
 import 'package:bookclub/utils/ourtheme.dart';
 import 'package:bookclub/widgets/myContainer.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
+
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  void _logUserIn(String email, String password, BuildContext context) async {
+    CurrentUser _user = Provider.of<CurrentUser>(context, listen: false);
+    try {
+      if (await _user.logInUser(email, password)) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Error signing in"),
+          ),
+        );
+      }
+    } catch (e) {
+      print("error signing user in. Error: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +51,14 @@ class LoginForm extends StatelessWidget {
           ),
         ),
         TextFormField(
+          controller: _emailController,
           decoration: InputDecoration(prefixIcon: Icon(Icons.alternate_email_rounded), hintText: "Email"),
         ),
         SizedBox(
           height: 20,
         ),
         TextFormField(
+          controller: _passwordController,
           decoration: InputDecoration(prefixIcon: Icon(Icons.lock_outline), hintText: "Password"),
           obscureText: true,
         ),
@@ -34,6 +68,7 @@ class LoginForm extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             print("Sign user up pressed!");
+            _logUserIn(_emailController.text, _passwordController.text, context);
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 76),

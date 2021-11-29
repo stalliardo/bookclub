@@ -1,8 +1,30 @@
+import 'package:bookclub/states/currentUser.dart';
 import 'package:bookclub/widgets/myContainer.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class SignUpForm extends StatelessWidget {
+class SignUpForm extends StatefulWidget {
   const SignUpForm({Key? key}) : super(key: key);
+
+  @override
+  _SignUpFormState createState() => _SignUpFormState();
+}
+
+class _SignUpFormState extends State<SignUpForm> {
+  TextEditingController _fullNameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
+
+  void _signUpUser(String email, String password, BuildContext context) async {
+    CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
+
+    try {
+      if (await _currentUser.registerUser(email, password)) {
+        Navigator.pop(context);
+      }
+    } catch (e) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,18 +39,21 @@ class SignUpForm extends StatelessWidget {
           ),
         ),
         TextFormField(
+          controller: _fullNameController,
           decoration: InputDecoration(prefixIcon: Icon(Icons.person_outline), hintText: "Full Name"),
         ),
         SizedBox(
           height: 20,
         ),
         TextFormField(
+          controller: _emailController,
           decoration: InputDecoration(prefixIcon: Icon(Icons.alternate_email_rounded), hintText: "Email"),
         ),
         SizedBox(
           height: 20,
         ),
         TextFormField(
+          controller: _passwordController,
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.lock_outline),
             hintText: "Password",
@@ -39,6 +64,7 @@ class SignUpForm extends StatelessWidget {
           height: 20,
         ),
         TextFormField(
+          controller: _confirmPasswordController,
           decoration: InputDecoration(prefixIcon: Icon(Icons.lock_open), hintText: "Confirm Password"),
           obscureText: true,
         ),
@@ -48,6 +74,15 @@ class SignUpForm extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             print("Sign user up pressed!");
+            if (_passwordController.text == _confirmPasswordController.text) {
+              _signUpUser(_emailController.text, _passwordController.text, context);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Passwords do not match!"),
+                ),
+              );
+            }
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 76),
