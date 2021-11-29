@@ -7,11 +7,8 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  print("Before called\n\n");
   await Firebase.initializeApp();
-  print("after called\n\n");
 
-  // print("Main function called after initilize app");
   runApp(ChangeNotifierProvider<CurrentUser>(
     create: (context) => CurrentUser(),
     builder: (context, _) => MyApp(),
@@ -23,13 +20,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("MyApp build method called");
     return MaterialApp(
       // removes the debug overlay from the previewer
       debugShowCheckedModeBanner: false,
       theme: OurTheme().buildTheme(),
       home: MyRoot(),
     );
-    // home: ,
   }
 }

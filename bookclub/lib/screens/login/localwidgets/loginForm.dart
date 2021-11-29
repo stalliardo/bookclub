@@ -63,7 +63,6 @@ class _LoginFormState extends State<LoginForm> {
         ),
         ElevatedButton(
           onPressed: () {
-            print("Sign user up pressed!");
             _logUserIn(_emailController.text, _passwordController.text, context);
           },
           child: Padding(

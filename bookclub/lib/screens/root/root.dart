@@ -18,41 +18,11 @@ class _MyRootState extends State<MyRoot> {
 
   @override
   Widget build(BuildContext context) {
-    // CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
-
-    // Widget showScreen = Container();
-
-    // print("Roots build method called + currentuser.isLogged in = ${_currentUser.isLoggedIn}");
-    // if (_currentUser.isLoggedIn) {
-    //   setState(() {
-    //     _authStatus = AuthStatus.loggedIn;
-    //   });
-    // } else {
-    //   setState(() {
-    //     _authStatus = AuthStatus.notLoggedIn;
-    //   });
-    // }
-
-    // switch (_authStatus) {
-    //   case AuthStatus.notLoggedIn:
-    //     showScreen = Login();
-    //     break;
-
-    //   case AuthStatus.loggedIn:
-    //     showScreen = HomeScreen();
-    //     break;
-
-    //   default:
-    // }
-
-    print("Root scaffold called!");
     return Scaffold(
       body: Center(
         child: Consumer<CurrentUser>(
           builder: (context, someVar, _) => ScreenLoader(isLoaded: someVar.isLoggedIn),
         ),
-        // child: Text("Temp"),
-        // child: showScreen,
       ),
     );
   }
