@@ -20,7 +20,8 @@ class _SignUpFormState extends State<SignUpForm> {
     CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
 
     try {
-      if (await _currentUser.registerUser(email, password)) {
+      String _resultString = await _currentUser.registerUser(email, password);
+      if (_resultString == "Success") {
         Navigator.pop(context);
       }
     } catch (e) {}

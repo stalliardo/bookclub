@@ -20,7 +20,8 @@ class _LoginFormState extends State<LoginForm> {
   void _logUserIn(String email, String password, BuildContext context) async {
     CurrentUser _user = Provider.of<CurrentUser>(context, listen: false);
     try {
-      if (await _user.logInUser(email, password)) {
+      String _returnString = await _user.logInUserWithEmailAndPassword(email, password);
+      if (_returnString == "Success") {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => HomeScreen(),
