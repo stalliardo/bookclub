@@ -1,7 +1,6 @@
 import 'package:bookclub/screens/home/home.dart';
 import 'package:bookclub/screens/signup/signup.dart';
 import 'package:bookclub/states/currentUser.dart';
-import 'package:bookclub/utils/ourtheme.dart';
 import 'package:bookclub/widgets/myContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,11 +21,7 @@ class _LoginFormState extends State<LoginForm> {
     try {
       String _returnString = await _user.logInUserWithEmailAndPassword(email, password);
       if (_returnString == "Success") {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(),
-          ),
-        );
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen()), (route) => false);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

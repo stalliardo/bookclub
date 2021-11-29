@@ -1,4 +1,4 @@
-import 'package:bookclub/screens/login/login.dart';
+import 'package:bookclub/screens/root/root.dart';
 import 'package:bookclub/states/currentUser.dart';
 import 'package:bookclub/utils/ourtheme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,22 +7,28 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  print("Before called\n\n");
   await Firebase.initializeApp();
-  runApp(MyApp());
+  print("after called\n\n");
+
+  // print("Main function called after initilize app");
+  runApp(ChangeNotifierProvider<CurrentUser>(
+    create: (context) => CurrentUser(),
+    builder: (context, _) => MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => CurrentUser(),
-      child: MaterialApp(
-        // removes the debug overlay from the previewer
-        debugShowCheckedModeBanner: false,
-        theme: OurTheme().buildTheme(),
-        home: Login(),
-      ),
+    print("MyApp build method called");
+    return MaterialApp(
+      // removes the debug overlay from the previewer
+      debugShowCheckedModeBanner: false,
+      theme: OurTheme().buildTheme(),
+      home: MyRoot(),
     );
     // home: ,
   }
