@@ -9,7 +9,7 @@ class OurTheme {
 
   ThemeData buildTheme() {
     return ThemeData(
-      canvasColor: _lightGreen,
+      canvasColor: Colors.white,
       primaryColor: _lightGreen,
       accentColor: __lightGrey,
       secondaryHeaderColor: __darkGrey,
