@@ -1,4 +1,4 @@
-import 'package:bookclub/screens/home/home.dart';
+import 'package:bookclub/screens/root/root.dart';
 import 'package:bookclub/screens/signup/signup.dart';
 import 'package:bookclub/states/currentUser.dart';
 import 'package:bookclub/widgets/myContainer.dart';
@@ -21,7 +21,7 @@ class _LoginFormState extends State<LoginForm> {
     try {
       String _returnString = await _user.logInUserWithEmailAndPassword(email, password);
       if (_returnString == "Success") {
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen()), (route) => false);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyRoot()), (route) => false);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

@@ -1,8 +1,39 @@
 import 'package:bookclub/screens/home/home.dart';
 import 'package:bookclub/screens/login/login.dart';
+import 'package:bookclub/screens/group/nogroup/noGroup.dart';
+import 'package:bookclub/screens/splashscreen/splashScreen.dart';
 import 'package:bookclub/states/currentUser.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+class ScreenLoader extends StatelessWidget {
+  final AuthStatus? authStatus;
+  ScreenLoader({required this.authStatus});
+
+  @override
+  Widget build(BuildContext context) {
+    Widget screenToDisplay = Login();
+
+    switch (authStatus!) {
+      case AuthStatus.isLoggedOut:
+        screenToDisplay = Login();
+        break;
+      case AuthStatus.unKnown:
+        screenToDisplay = SplashScreen();
+
+        break;
+      case AuthStatus.isInGroup:
+        screenToDisplay = HomeScreen();
+
+        break;
+      case AuthStatus.notInGroup:
+        screenToDisplay = MyNoGroup();
+        break;
+    }
+
+    return screenToDisplay;
+  }
+}
 
 class MyRoot extends StatefulWidget {
   MyRoot({Key? key}) : super(key: key);
@@ -17,21 +48,9 @@ class _MyRootState extends State<MyRoot> {
     return Scaffold(
       body: Center(
         child: Consumer<CurrentUser>(
-          builder: (context, _user, _) => ScreenLoader(isLoggedIn: _user.isLoggedIn),
+          builder: (context, _user, _) => ScreenLoader(authStatus: _user.authStatus),
         ),
       ),
     );
-  }
-}
-
-// class to determine which Widget to render...
-class ScreenLoader extends StatelessWidget {
-  bool isLoggedIn;
-
-  ScreenLoader({required this.isLoggedIn});
-
-  @override
-  Widget build(BuildContext context) {
-    return isLoggedIn ? HomeScreen() : Login();
   }
 }

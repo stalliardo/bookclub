@@ -1,4 +1,4 @@
-import 'package:bookclub/screens/nogroup/noGroup.dart';
+import 'package:bookclub/screens/group/nogroup/noGroup.dart';
 import 'package:bookclub/screens/root/root.dart';
 import 'package:bookclub/states/currentUser.dart';
 import 'package:bookclub/widgets/myContainer.dart';

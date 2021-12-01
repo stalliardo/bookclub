@@ -1,13 +1,30 @@
+import 'package:bookclub/screens/group/createGroup/createGroup.dart';
+import 'package:bookclub/screens/group/joinGroup/joinGroup.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MyNoGroup extends StatelessWidget {
   const MyNoGroup({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    void _goToJoin() {}
+    void _goToJoin() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => JoinGroup(),
+        ),
+      );
+    }
 
-    void _goToCreate() {}
+    void _goToCreate() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CreateGroup(),
+        ),
+      );
+    }
 
     return Scaffold(
         body: ListView(

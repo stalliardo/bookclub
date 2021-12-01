@@ -5,12 +5,15 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/cupertino.dart';
 
+enum AuthStatus { isLoggedOut, unKnown, isInGroup, notInGroup }
+
 class CurrentUser extends ChangeNotifier {
   MyUser? _currentUser = MyUser();
   MyUser get getCurrentUser => _currentUser!;
 
-  bool _isLoggedIn = false;
-  bool get isLoggedIn => _isLoggedIn;
+  AuthStatus _authStatus = AuthStatus.isLoggedOut;
+  AuthStatus get authStatus => _authStatus;
+
   FirebaseAuth? _auth;
 
   CurrentUser() {
@@ -18,17 +21,23 @@ class CurrentUser extends ChangeNotifier {
   }
 
   Future<void> init() async {
+    _authStatus = AuthStatus.unKnown;
     _auth = FirebaseAuth.instance;
     _auth!.userChanges().listen((user) async {
       if (user != null) {
         _currentUser = await MyDatabase().getUserInfo(user.uid);
-        _isLoggedIn = true;
+        print("CurrentUser: \n\n${_currentUser!.groupId}");
+        if (_currentUser!.groupId == null) {
+          _authStatus = AuthStatus.notInGroup; // logged in but not in group
+        } else {
+          _authStatus = AuthStatus.isInGroup;
+        }
 
         MyDatabase().getUserInfo(user.uid);
       } else {
         _currentUser!.uid = null;
         _currentUser!.email = null;
-        _isLoggedIn = false;
+        _authStatus = AuthStatus.isLoggedOut;
       }
 
       notifyListeners();
@@ -85,7 +94,7 @@ class CurrentUser extends ChangeNotifier {
     try {
       await FirebaseAuth.instance.signOut();
       _currentUser = MyUser();
-      _isLoggedIn = false;
+      _authStatus = AuthStatus.isLoggedOut;
       returnValue = "Success";
     } catch (e) {
       returnValue = "error";
