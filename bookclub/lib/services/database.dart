@@ -1,3 +1,5 @@
+import 'package:bookclub/models/book.dart';
+import 'package:bookclub/models/group.dart';
 import 'package:bookclub/models/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -82,5 +84,53 @@ class MyDatabase {
     } catch (e) {
       return StatusCode.ERROR;
     }
+  }
+
+  Future<MyGroup> getGroupInfo(String groupId) async {
+    MyGroup? group;
+
+    try {
+      DocumentSnapshot _doc = await _firestore.collection("groups").doc(groupId).get();
+
+      Map<String, dynamic> data = _doc.data() as Map<String, dynamic>;
+
+      group = MyGroup(
+        id: groupId,
+        name: data["name"],
+        leader: data["leader"],
+        members: List<String>.from(data["members"]),
+        groupCreated: data["groupCreated"],
+        currentBookId: data["currentBookId"],
+        currentBookDueDate: data["currentBookDueDate"],
+      );
+      return group;
+    } catch (e) {
+      print(e);
+    }
+
+    return group!;
+  }
+
+  Future<Book> getCurrentBook(String groupId, String bookId) async {
+    Book? book;
+
+    try {
+      // Get the nested books collection from inside the groups collection
+      DocumentSnapshot _doc = await _firestore.collection("groups").doc(groupId).collection("books").doc(bookId).get();
+
+      Map<String, dynamic> data = _doc.data() as Map<String, dynamic>;
+
+      book = Book(
+        id: bookId,
+        name: data["name"],
+        length: data["length"],
+        completedDate: data["completedDate"],
+      );
+      return book;
+    } catch (e) {
+      print(e);
+    }
+
+    return book!;
   }
 }

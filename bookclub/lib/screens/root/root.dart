@@ -2,6 +2,7 @@ import 'package:bookclub/screens/home/home.dart';
 import 'package:bookclub/screens/login/login.dart';
 import 'package:bookclub/screens/group/nogroup/noGroup.dart';
 import 'package:bookclub/screens/splashscreen/splashScreen.dart';
+import 'package:bookclub/states/currentGroup.dart';
 import 'package:bookclub/states/currentUser.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,11 @@ class ScreenLoader extends StatelessWidget {
 
         break;
       case AuthStatus.isInGroup:
-        screenToDisplay = HomeScreen();
+        // Use changeNotifierProvider to provide changes of the state of the group to the only the homeScreen
+        screenToDisplay = ChangeNotifierProvider<CurrentGroup>(
+          create: (context) => CurrentGroup(),
+          builder: (context, _) => HomeScreen(),
+        );
 
         break;
       case AuthStatus.notInGroup:

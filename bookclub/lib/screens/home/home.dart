@@ -1,12 +1,27 @@
 import 'package:bookclub/screens/group/nogroup/noGroup.dart';
 import 'package:bookclub/screens/root/root.dart';
+import 'package:bookclub/states/currentGroup.dart';
 import 'package:bookclub/states/currentUser.dart';
 import 'package:bookclub/widgets/myContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
+    CurrentGroup _currentGroup = Provider.of<CurrentGroup>(context, listen: false);
+    _currentGroup.updateStateFromDatabase(_currentUser.getCurrentUser.groupId);
+  }
 
   void _signOut(BuildContext context) async {
     // TODO sign user out
@@ -39,38 +54,42 @@ class HomeScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(20.0),
             child: MyContainer(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Harry Potter and the sorceror's stone",
-                    style: TextStyle(fontSize: 25, color: Colors.grey[600]),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Due in:",
-                          style: TextStyle(fontSize: 20, color: Colors.grey[600]),
-                        ),
-                        Text(
-                          " 8 Days",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ],
+              child: Consumer<CurrentGroup>(
+                builder: (context, _currentGroup, _) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _currentGroup.getCurrentBook?.name ?? "Loading...",
+                      style: TextStyle(fontSize: 25, color: Colors.grey[600]),
                     ),
-                  ),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Finished Book",
-                        style: TextStyle(color: Colors.white),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Due in:",
+                            style: TextStyle(fontSize: 20, color: Colors.grey[600]),
+                          ),
+                          Expanded(
+                            child: Text(
+                              _currentGroup.getCurrentGroup?.currentBookDueDate?.toDate().toString() ?? "Loading...",
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  )
-                ],
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Text(
+                          "Finished Book",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

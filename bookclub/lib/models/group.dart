@@ -6,6 +6,16 @@ class MyGroup {
   String? leader;
   List<String>? members;
   Timestamp? groupCreated;
+  String? currentBookId;
+  Timestamp? currentBookDueDate;
 
-  MyGroup({required this.id, required this.name, required this.leader, required this.members, required this.groupCreated});
+  MyGroup({
+    required this.id,
+    required this.name,
+    required this.leader,
+    required this.members,
+    required this.groupCreated,
+    this.currentBookId,
+    this.currentBookDueDate,
+  });
 }
