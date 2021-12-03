@@ -12,14 +12,16 @@ class CurrentGroup extends ChangeNotifier {
 
   // These should be a stream, this is not the best/most effecient way of doing it
   void updateStateFromDatabase(String? groupId) async {
+    print("update top called");
     try {
       // get group info from firebase
       // get the current book info from firebase
       _currentGroup = await MyDatabase().getGroupInfo(groupId!);
       _currentBook = await MyDatabase().getCurrentBook(groupId, _currentGroup!.currentBookId!);
       notifyListeners();
+      print("updateState called");
     } catch (e) {
-      print(e);
+      print("An error occured while updating the state from the database. Error: $e");
     }
   }
 }

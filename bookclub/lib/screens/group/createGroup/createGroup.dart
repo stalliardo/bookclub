@@ -1,3 +1,4 @@
+import 'package:bookclub/screens/addBook/addBook.dart';
 import 'package:bookclub/screens/root/root.dart';
 import 'package:bookclub/services/database.dart';
 import 'package:bookclub/states/currentUser.dart';
@@ -13,14 +14,16 @@ class CreateGroup extends StatefulWidget {
 }
 
 class _CreateGroupState extends State<CreateGroup> {
-  void _createGroup(BuildContext context, String groupName) async {
-    CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
-    StatusCode _statusCode = await MyDatabase().createGroup(groupName, _currentUser.getCurrentUser.uid!);
-
-    if (_statusCode == StatusCode.SUCCESS) {
-      // Passed to the root widget as that decides what screen/widget to display.
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyRoot()), (route) => false);
-    }
+  void _gotToAddBook(BuildContext context, String groupName) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddBook(
+          onGroupCreation: true,
+          groupName: groupName,
+        ),
+      ),
+    );
   }
 
   TextEditingController _groupNameController = TextEditingController();
@@ -46,7 +49,7 @@ class _CreateGroupState extends State<CreateGroup> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      _createGroup(context, _groupNameController.text);
+                      _gotToAddBook(context, _groupNameController.text);
                     },
                     child: Text(
                       "Create",

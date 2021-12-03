@@ -48,7 +48,7 @@ class MyDatabase {
 
   /////////////////////////////////////////////// Group operations ///////////////////////////////////////////////
 
-  Future<StatusCode> createGroup(String groupName, String userUid) async {
+  Future<StatusCode> createGroup(String groupName, String userUid, Book initialBook) async {
     // DocumentReference is used here to get the groupId so we can use it
     List<String>? members = [];
     try {
@@ -64,6 +64,14 @@ class MyDatabase {
       await _firestore.collection("users").doc(userUid).update({
         "groupId": docRef.id,
       });
+
+      //TODO add book
+
+      await addBook(docRef.id, initialBook);
+
+      // trouble now is that the changes to the user state arent being observed/notified....
+      // every call to the root page should reload the currentUser to refresh any state changes
+
       return StatusCode.SUCCESS;
     } catch (e) {
       return StatusCode.ERROR;
@@ -100,7 +108,7 @@ class MyDatabase {
         leader: data["leader"],
         members: List<String>.from(data["members"]),
         groupCreated: data["groupCreated"],
-        currentBookId: data["currentBookId"],
+        currentBookId: data["currentBookId"], // This is null
         currentBookDueDate: data["currentBookDueDate"],
       );
       return group;
@@ -109,6 +117,31 @@ class MyDatabase {
     }
 
     return group!;
+  }
+
+  Future<StatusCode> addBook(String groupId, Book book) async {
+    try {
+      DocumentReference _docRef = await _firestore.collection("groups").doc(groupId).collection("books").add({
+        // using add here to get a doc ref
+        "name": book.name,
+        "author": book.author,
+        "length": book.length,
+        "completedDate": book.completedDate,
+      });
+
+      // doc ref needed to add the current book to the group schedule
+
+      await _firestore.collection("groups").doc(groupId).update({
+        "currentBookId": _docRef.id,
+        "currentBookDueDate": book.completedDate,
+      });
+
+      return StatusCode.SUCCESS;
+    } catch (e) {
+      print(e);
+    }
+
+    return StatusCode.ERROR;
   }
 
   Future<Book> getCurrentBook(String groupId, String bookId) async {
@@ -125,6 +158,7 @@ class MyDatabase {
         name: data["name"],
         length: data["length"],
         completedDate: data["completedDate"],
+        author: data["author"],
       );
       return book;
     } catch (e) {

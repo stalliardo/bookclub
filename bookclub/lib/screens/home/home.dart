@@ -1,3 +1,4 @@
+import 'package:bookclub/screens/addBook/addBook.dart';
 import 'package:bookclub/screens/group/nogroup/noGroup.dart';
 import 'package:bookclub/screens/root/root.dart';
 import 'package:bookclub/states/currentGroup.dart';
@@ -18,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    print("init state called");
     CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
     CurrentGroup _currentGroup = Provider.of<CurrentGroup>(context, listen: false);
     _currentGroup.updateStateFromDatabase(_currentUser.getCurrentUser.groupId);
@@ -33,11 +35,15 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _goToNoGroup(BuildContext context) {
+  void _goToAddBook(BuildContext context) {
+    CurrentGroup _currentGroup = Provider.of<CurrentGroup>(context, listen: false);
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MyNoGroup(),
+        builder: (context) => AddBook(
+          onGroupCreation: false,
+          groupName: _currentGroup.getCurrentGroup?.name,
+        ),
       ),
     );
   }
@@ -118,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 "Book Club History",
               ),
               onPressed: () async {
-                _goToNoGroup(context);
+                _goToAddBook(context);
               },
             ),
           ),

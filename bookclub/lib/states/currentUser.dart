@@ -17,16 +17,18 @@ class CurrentUser extends ChangeNotifier {
   FirebaseAuth? _auth;
 
   CurrentUser() {
+    print(("CurrentUser constructor called"));
     init();
   }
 
   Future<void> init() async {
+    print("Currentuser init called");
     _authStatus = AuthStatus.unKnown;
     _auth = FirebaseAuth.instance;
     _auth!.userChanges().listen((user) async {
       if (user != null) {
         _currentUser = await MyDatabase().getUserInfo(user.uid);
-        print("CurrentUser: \n\n${_currentUser!.groupId}");
+        print("CurrentUser groupId = : ${_currentUser!.groupId}");
         if (_currentUser!.groupId == null) {
           _authStatus = AuthStatus.notInGroup; // logged in but not in group
         } else {
@@ -39,7 +41,7 @@ class CurrentUser extends ChangeNotifier {
         _currentUser!.email = null;
         _authStatus = AuthStatus.isLoggedOut;
       }
-
+      print("notify listeners called at the bottom of inti");
       notifyListeners();
     });
   }
